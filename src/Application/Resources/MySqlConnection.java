@@ -4,7 +4,8 @@ import java.sql.*;
 
 public class MySqlConnection {
     private static final String
-            DATABASE_URL = "jdbc:mysql://localhost:3306/restaurant_DB?useSSL=false",
+            DATABASE_URL = "jdbc:mariadb://localhost:3306/restaurant_DB?useSSL=false",
+//            DATABASE_URL = "jdbc:mariadb:restaurant_DB.sql",
             DATABASE_USERNAME = "rayed_restaurant",
             DATABASE_PASSWORD = "0198";
 
@@ -14,6 +15,7 @@ public class MySqlConnection {
 
     private MySqlConnection () {
         try {
+//            Class.forName("org.mariadb.jdbc.Driver");
             connection = DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
         } catch (SQLException e) {
             e.printStackTrace();
