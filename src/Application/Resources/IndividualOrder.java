@@ -55,10 +55,6 @@ public class IndividualOrder {
         return quantity;
     }
 
-    public int getTable_id() {
-        return product_id;
-    }
-
     public String getComment() {
         return comment;
     }
