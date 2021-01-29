@@ -3,7 +3,7 @@ package Application.Resources;
 public class Report {
     private int ID;
     private String Activity;
-
+//      test
     public Report(int ID, String Activity) {
         this.ID = ID;
         this.Activity = Activity;
