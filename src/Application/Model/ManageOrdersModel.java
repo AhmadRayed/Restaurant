@@ -15,7 +15,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManageOrdersModel {
+public class ManageOrdersModel implements Observable{
 
     private List <OrderButton> orderButtons = new ArrayList<>();
     private List <Order> orders = new ArrayList<>();
@@ -25,6 +25,9 @@ public class ManageOrdersModel {
     private java.sql.Date currentDate;
     private java.sql.Time currentTime;
 
+    private Observer observer;
+    private Order Gorder;
+    private Table Gtable;
 
     public ManageOrdersModel()
     {
@@ -73,6 +76,10 @@ public class ManageOrdersModel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setObserver(Observer observer) {
+        this.observer = observer;
     }
 
     private List <Order> getOrders () {
@@ -162,8 +169,11 @@ public class ManageOrdersModel {
             Order order = getOrder(table.getId());
             orders.add(order);
             MyMethods.addtoWaiterLog("CREATE AN ORDER WITH ID = " + order.getOrder_ID());
-            WaiterDashBoardModel.order = order;
-            WaiterDashBoardModel.table = table;
+//            WaiterDashBoardModel.order = order;
+//            WaiterDashBoardModel.table = table;
+            Gorder = order;
+            Gtable = table;
+            notifyObserver();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -200,10 +210,18 @@ public class ManageOrdersModel {
                 if (X.getWaiter_ID() != LoginModel.employee.getId())
                     MyMethods.showAlert("!!This Table is not owned By you!!", "ERROR", Alert.AlertType.ERROR, window);
                 else {
-                    WaiterDashBoardModel.order = X;
-                    WaiterDashBoardModel.table = table;
+//                    WaiterDashBoardModel.order = X;
+//                    WaiterDashBoardModel.table = table;
+                    Gorder = X;
+                    Gtable = table;
+                    notifyObserver();
               }
             }
         }
+    }
+
+    @Override
+    public void notifyObserver() {
+        observer.updateOrder(Gtable, Gorder);
     }
 }

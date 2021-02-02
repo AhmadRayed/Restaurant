@@ -1,6 +1,7 @@
 package Application.Controller;
 
 import Application.Model.VerifyItemEditModel;
+import Application.Model.WaiterDashBoardModel;
 import Application.Resources.IndividualOrder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,7 +29,7 @@ public class VerifyItemEditController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        verifyItemEditModel = new VerifyItemEditModel();
+        verifyItemEditModel = new VerifyItemEditModel(WaiterDashBoardModel.T);
     }
 
     @FXML

@@ -24,7 +24,7 @@ public class QuantityController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        quantityModel = new QuantityModel();
+        quantityModel = new QuantityModel(WaiterDashBoardModel.T);
     }
 
     @FXML
@@ -39,7 +39,8 @@ public class QuantityController implements Initializable {
         quantityModel.AddOrder(txtQuantity.getText(), txtAComment.getText(), ((Node) event.getSource()).getScene().getWindow());
         txtAComment.setText("");
         txtQuantity.setText("1");
-        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
+
+//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 

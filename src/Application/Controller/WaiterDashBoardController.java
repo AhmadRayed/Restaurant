@@ -1,8 +1,7 @@
 package Application.Controller;
 
 import Application.Model.WaiterDashBoardModel;
-import Application.Resources.IndividualOrder;
-import Application.Resources.MyMethods;
+import Application.Resources.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -24,8 +25,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class WaiterDashBoardController implements Initializable {
+public class WaiterDashBoardController implements Initializable, Observer {
 
+    public Button btNewOrder;
     @FXML
     private TableView <IndividualOrder> tableview;
 
@@ -75,18 +77,21 @@ public class WaiterDashBoardController implements Initializable {
         WaiterDashBoardModel.setT(this);
         waiterDashBoardModel = new WaiterDashBoardModel(vbCategory, GPane);
         waiterDashBoardModel.setWaiterName(lblUsername);
-        if (WaiterDashBoardModel.order != null) {
-            waiterDashBoardModel.ShowTable(tableview, ColName, ColPrice, ColQuantity, ColTotal);
-            waiterDashBoardModel.setTableName(lblTableName);
-            lblTotal.setText("0.0");
-            waiterDashBoardModel.setTotal(lblTotal);
-        }
-        else {
-            lblTableName.setText("TableName");
+//        if (WaiterDashBoardModel.order != null) {
+//            waiterDashBoardModel.ShowTable(tableview, ColName, ColPrice, ColQuantity, ColTotal);
+//            waiterDashBoardModel.setTableName(lblTableName);
+//            lblTotal.setText("0.0");
+//            waiterDashBoardModel.setTotal(lblTotal);
+//        }
+//        else {
+                if (WaiterDashBoardModel.order == null) {
+
+        lblTableName.setText("TableName");
             lblTotal.setText("0.0");
             waiterDashBoardModel.ShowEmpty (tableview, ColName, ColPrice, ColQuantity, ColTotal);
         }
         addListenerForTable ();
+//        setGlobalEventHandler ();
     }
 
     @FXML
@@ -187,7 +192,7 @@ public class WaiterDashBoardController implements Initializable {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-        this.initialize(null, null);
+//        this.initialize(null, null);
     }
 
     private void addListenerForTable () {
@@ -202,5 +207,36 @@ public class WaiterDashBoardController implements Initializable {
             }
         }));
     }
+
+    @Override
+    public void updateOrder(Table table, Order order) {
+        WaiterDashBoardModel.order = order;
+        WaiterDashBoardModel.table = table;
+        if (order != null) {
+            waiterDashBoardModel.ShowTable(tableview, ColName, ColPrice, ColQuantity, ColTotal);
+            waiterDashBoardModel.setTableName(lblTableName);
+            lblTotal.setText("0.0");
+            waiterDashBoardModel.setTotal(lblTotal);
+        } else {
+            lblTableName.setText("TableName");
+            lblTotal.setText("0.0");
+            waiterDashBoardModel.ShowEmpty(tableview, ColName, ColPrice, ColQuantity, ColTotal);
+        }
+    }
+
+    @Override
+    public void updateTable() {
+        waiterDashBoardModel.ShowTable(tableview, ColName, ColPrice, ColQuantity, ColTotal);
+        waiterDashBoardModel.setTotal(lblTotal);
+    }
+
+//    private void setGlobalEventHandler (Button node) {
+//        node.addEventHandler (KeyEvent.KEY_PRESSED, ev -> {
+//            if (ev.getCode() == KeyCode.F1) {
+//                node.fire();
+//                ev.consume();
+//            }
+//        });
+//    }
 
 }

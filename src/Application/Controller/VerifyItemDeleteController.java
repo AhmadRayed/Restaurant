@@ -1,6 +1,7 @@
 package Application.Controller;
 
 import Application.Model.VerifyItemDeleteModel;
+import Application.Model.WaiterDashBoardModel;
 import Application.Resources.IndividualOrder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,7 @@ public class VerifyItemDeleteController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        verifyItemDeleteModel = new VerifyItemDeleteModel();
+        verifyItemDeleteModel = new VerifyItemDeleteModel(WaiterDashBoardModel.T);
     }
     @FXML
     public void Cancel_Action(ActionEvent event) {

@@ -25,7 +25,7 @@ public class VerifyCancelController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        verifyCancelModel = new VerifyCancelModel();
+        verifyCancelModel = new VerifyCancelModel(WaiterDashBoardModel.T);
     }
     @FXML
     public void Cancel_Action(ActionEvent event) {
@@ -35,9 +35,9 @@ public class VerifyCancelController implements Initializable {
     @FXML
     public void verify_Action(ActionEvent event) {
         verifyCancelModel.Cancel(txtUsername.getText(), txtPassword.getText(), order.getOrder_ID());
-        WaiterDashBoardModel.order = null;
-        WaiterDashBoardModel.table = null;
-        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
+//        WaiterDashBoardModel.order = null;
+//        WaiterDashBoardModel.table = null;
+//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         Cancel_Action(event);
 
     }

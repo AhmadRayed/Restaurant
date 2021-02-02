@@ -36,7 +36,6 @@ public class WaiterDashBoardModel {
     public static Order order;
     public static Table table;
     public static Object T;
-
     ObservableList <IndividualOrder> individualOrders;
 
     private GridPane gridPane;
@@ -52,6 +51,7 @@ public class WaiterDashBoardModel {
     public void setWaiterName (Label label) {
         label.setText(waiter.FullName());
     }
+
     private List <Menu> getCategories () {
         List <Menu> Categories = new ArrayList<>();
         String SELECT_QUERY = "SELECT * FROM `caregory_Table`";

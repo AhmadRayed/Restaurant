@@ -23,20 +23,20 @@ public class PaymentController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        paymentModel = new PaymentModel();
+        paymentModel = new PaymentModel(WaiterDashBoardModel.T);
     }
 
     @FXML
     private void ByCard(ActionEvent event) {
         paymentModel.ByCard (txtDiscount.getText(), txtCardNumber.getText());
-        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
+//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
     @FXML
     private void ByCash(ActionEvent event) {
         paymentModel.ByCash (txtDiscount.getText());
-        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
+//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 }

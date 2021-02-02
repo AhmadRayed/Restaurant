@@ -1,6 +1,8 @@
 package Application.Controller;
 
 import Application.Model.ManageOrdersModel;
+import Application.Model.WaiterDashBoardModel;
+import Application.Resources.Observer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.GridPane;
@@ -19,6 +21,7 @@ public class ManageOrdersController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         manageOrdersModel = new ManageOrdersModel();
+        manageOrdersModel.setObserver((Observer) WaiterDashBoardModel.T);
         manageOrdersModel.ShowButtons(Gpane);
     }
 

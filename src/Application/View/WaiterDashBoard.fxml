@@ -79,7 +79,7 @@
          <children>
             <HBox prefHeight="50.0" prefWidth="1327.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#NewOrder_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #f5cd79;" text="F1 - New Order" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="btNewOrder" mnemonicParsing="false" onAction="#NewOrder_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #f5cd79;" text="F1 - New Order" HBox.hgrow="ALWAYS" />
                   <Button mnemonicParsing="false" onAction="#Payment_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F2 - Payment" textFill="WHITE" />
                   <Button mnemonicParsing="false" onAction="#Cancel_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F3 - Cancel Order" textFill="WHITE" />
                   <Button mnemonicParsing="false" onAction="#ManageTable" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F4 - Manage Tables" textFill="WHITE" />

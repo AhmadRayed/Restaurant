@@ -1,13 +1,15 @@
 package Application.Model;
 
-import Application.Controller.WaiterDashBoardController;
-import Application.Resources.MyMethods;
-import Application.Resources.Payment;
-import Application.Resources.PaymentFactory;
+import Application.Resources.*;
 
-public class PaymentModel {
+public class PaymentModel implements Observable {
 
+    private Observer observer;
     private Payment payment;
+
+    public PaymentModel(Object t) {
+        observer = (Observer) t;
+    }
 
     public void ByCard(String discount, String cardNumber) {
         String C = "";
@@ -25,8 +27,7 @@ public class PaymentModel {
 
         MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
                 "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CARD");
-        WaiterDashBoardModel.order = null;
-        WaiterDashBoardModel.table = null;
+        notifyObserver();
     }
 
     public void ByCash(String discount) {
@@ -41,7 +42,11 @@ public class PaymentModel {
             payment.Discount();
         MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
                                         "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CASH");
-        WaiterDashBoardModel.order = null;
-        WaiterDashBoardModel.table = null;
+        notifyObserver();
+    }
+
+    @Override
+    public void notifyObserver() {
+        observer.updateOrder(null, null);
     }
 }
