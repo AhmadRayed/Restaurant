@@ -64,6 +64,9 @@ public class LoginModel {
                                         resultSet.getString("password"),      resultSet.getString("email"),
                                         resultSet.getString("mobile_number"), resultSet.getDouble("salary"),
                                         resultSet.getInt("manager_id"));
+                WaiterDashBoardModel.waiter = (Waiter) employee;
+                WaiterDashBoardModel.table = null;
+                WaiterDashBoardModel.order = null;
                 MyMethods.addtoWaiterLog("LOGIN.");
                 return true;
             }

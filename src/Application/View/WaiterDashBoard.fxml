@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.WaiterDashBoardController">
+<BorderPane onKeyPressed="#Press_Action" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.WaiterDashBoardController">
    <right>
       <VBox prefHeight="683.0" prefWidth="532.0" style="-fx-background-color: #d1ccc0;" BorderPane.alignment="CENTER">
          <children>
@@ -80,12 +80,12 @@
             <HBox prefHeight="50.0" prefWidth="1327.0" spacing="10.0">
                <children>
                   <Button fx:id="btNewOrder" mnemonicParsing="false" onAction="#NewOrder_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #f5cd79;" text="F1 - New Order" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" onAction="#Payment_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F2 - Payment" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#Cancel_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F3 - Cancel Order" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#ManageTable" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F4 - Manage Tables" textFill="WHITE" />
+                  <Button fx:id="btPayment" mnemonicParsing="false" onAction="#Payment_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F2 - Payment" textFill="WHITE" />
+                  <Button fx:id="btCancelOrder" mnemonicParsing="false" onAction="#Cancel_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F3 - Cancel Order" textFill="WHITE" />
+                  <Button fx:id="btManageTable" mnemonicParsing="false" onAction="#ManageTable" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #cf6a87;" text="F4 - Manage Tables" textFill="WHITE" />
                   <Pane prefHeight="30.0" prefWidth="346.0" />
-                  <Button mnemonicParsing="false" onAction="#Logout_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #c44569;" text="F6 - Logout" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#Exit_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #ff0000;" text="F7 - Exit" textFill="WHITE" />
+                  <Button fx:id="btLogout" mnemonicParsing="false" onAction="#Logout_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #c44569;" text="F6 - Logout" textFill="WHITE" />
+                  <Button fx:id="btExit" mnemonicParsing="false" onAction="#Exit_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #ff0000;" text="F7 - Exit" textFill="WHITE" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

@@ -27,7 +27,24 @@ import java.util.ResourceBundle;
 
 public class WaiterDashBoardController implements Initializable, Observer {
 
-    public Button btNewOrder;
+    @FXML
+    private Button btNewOrder;
+
+    @FXML
+    private Button btPayment;
+
+    @FXML
+    private Button btCancelOrder;
+
+    @FXML
+    private Button btManageTable;
+
+    @FXML
+    private Button btLogout;
+
+    @FXML
+    private Button btExit;
+
     @FXML
     private TableView <IndividualOrder> tableview;
 
@@ -77,22 +94,14 @@ public class WaiterDashBoardController implements Initializable, Observer {
         WaiterDashBoardModel.setT(this);
         waiterDashBoardModel = new WaiterDashBoardModel(vbCategory, GPane);
         waiterDashBoardModel.setWaiterName(lblUsername);
-//        if (WaiterDashBoardModel.order != null) {
-//            waiterDashBoardModel.ShowTable(tableview, ColName, ColPrice, ColQuantity, ColTotal);
-//            waiterDashBoardModel.setTableName(lblTableName);
-//            lblTotal.setText("0.0");
-//            waiterDashBoardModel.setTotal(lblTotal);
-//        }
-//        else {
-                if (WaiterDashBoardModel.order == null) {
-
+        if (WaiterDashBoardModel.order == null) {
         lblTableName.setText("TableName");
             lblTotal.setText("0.0");
             waiterDashBoardModel.ShowEmpty (tableview, ColName, ColPrice, ColQuantity, ColTotal);
         }
         addListenerForTable ();
-//        setGlobalEventHandler ();
     }
+
 
     @FXML
     private void EditItem(ActionEvent event) {
@@ -192,7 +201,6 @@ public class WaiterDashBoardController implements Initializable, Observer {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-//        this.initialize(null, null);
     }
 
     private void addListenerForTable () {
@@ -230,13 +238,19 @@ public class WaiterDashBoardController implements Initializable, Observer {
         waiterDashBoardModel.setTotal(lblTotal);
     }
 
-//    private void setGlobalEventHandler (Button node) {
-//        node.addEventHandler (KeyEvent.KEY_PRESSED, ev -> {
-//            if (ev.getCode() == KeyCode.F1) {
-//                node.fire();
-//                ev.consume();
-//            }
-//        });
-//    }
 
+    public void Press_Action(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.F1)
+            btNewOrder.fire();
+        else if (keyEvent.getCode() == KeyCode.F2)
+                    btPayment.fire();
+            else if (keyEvent.getCode() == KeyCode.F3)
+                        btCancelOrder.fire();
+                        else if (keyEvent.getCode() == KeyCode.F4)
+                                    btManageTable.fire();
+                                    else if (keyEvent.getCode() == KeyCode.F6)
+                                                    btLogout.fire();
+                                                else if (keyEvent.getCode() == KeyCode.F7)
+                                                            btExit.fire();
+    }
 }
