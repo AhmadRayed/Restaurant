@@ -16,7 +16,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class ManagerDashBoardModel {
-    public static Manager manager = (Manager) LoginModel.employee;
+    public static Manager manager;
 
     public void setUsername (Label label) {
         label.setText(manager.FullName());
@@ -25,27 +25,5 @@ public class ManagerDashBoardModel {
     public void setBT(Button button) {
         if (manager.getAdmin() == 1)
                 button.setDisable(false);
-    }
-
-    public void Logout_Action(Stage stage, Object object) {
-        Exit_Action (stage, object);
-        try {
-            Parent parentRoot = FXMLLoader.load(getClass().getResource("/Application/View/Login.fxml"));
-            Stage primaryStage = new Stage();
-            primaryStage.setTitle("Login");
-            primaryStage.setResizable(false);
-            primaryStage.setIconified(false);
-            primaryStage.initStyle(StageStyle.UNDECORATED);
-            primaryStage.setScene(new Scene(parentRoot));
-            primaryStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void Exit_Action(Stage stage, Object object) {
-        MyMethods.addtoManagerLog("LOGOUT.");
-        stage.close();
-        object = null;
     }
 }

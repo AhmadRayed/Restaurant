@@ -1,5 +1,6 @@
 package Application.Model;
 
+import Application.Controller.ManageManagersController;
 import Application.Resources.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,8 +16,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ManageManagersModel {
+public class ManageManagersModel implements Observable{
 
+    public static Object object;
     private Manager manager = ManagerDashBoardModel.manager;
 
     public void ShowTable(TableView<Employee> tableView, TableColumn<Employee, Integer> colID,
@@ -76,26 +78,18 @@ public class ManageManagersModel {
         cbOption.setItems(Options);
     }
 
-    public void UpdateManager(TableView<Employee> tableView, TableColumn<Employee, Integer> colID,
-                              TableColumn<Employee, String> colFName, TableColumn<Employee, String> colLName,
-                              TableColumn<Employee, String> colUsername, TableColumn<Employee, String> colPassword,
-                              TableColumn<Employee, String> colEmail, TableColumn<Employee, String> colMobile,
-                              TableColumn<Employee, Double> colSalary, String text, String option) {
+    public void UpdateManager(TableView<Employee> tableView, String text, String option) {
 
         Manager m = (Manager) tableView.getSelectionModel().getSelectedItem();
 
-        if (text.isEmpty() || option.isEmpty())     return;
+        if (text.isEmpty() || option == null)     return;
         String UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ option +"` = '"+ text+"' WHERE `manager_Table`.id = '"+ m.getId() +"'";
         MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
         MyMethods.addtoManagerLog("UPDATE MANAGER WITH ID = " + m.getId());
-        ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
+        notifyObserver();
     }
 
-    public void DeleteManager(TableView<Employee> tableView, TableColumn<Employee, Integer> colID,
-                              TableColumn<Employee, String> colFName, TableColumn<Employee, String> colLName,
-                              TableColumn<Employee, String> colUsername, TableColumn<Employee, String> colPassword,
-                              TableColumn<Employee, String> colEmail, TableColumn<Employee, String> colMobile,
-                              TableColumn<Employee, Double> colSalary, Window window) {
+    public void DeleteManager(TableView<Employee> tableView, Window window) {
         Manager m = (Manager) tableView.getSelectionModel().getSelectedItem();
 
         String alert = "Remove all waiters belongs to this manager!!";
@@ -110,6 +104,7 @@ public class ManageManagersModel {
             }
             else {
                 MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, "error in delete Query");
+                notifyObserver();
                 MyMethods.addtoManagerLog("DELETE MANAGER WITH ID = " + m.getId());
             }
         } catch (SQLException e) {
@@ -135,8 +130,14 @@ public class ManageManagersModel {
 
             preparedStatement.executeQuery();
             MyMethods.addtoManagerLog("ADD NEW MANAGER WITH NAME = " + firstname + " " + lastname);
+            notifyObserver();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void notifyObserver() {
+        ((Observer) object).updateTable();
     }
 }

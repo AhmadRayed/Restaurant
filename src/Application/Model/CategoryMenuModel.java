@@ -1,9 +1,7 @@
 package Application.Model;
 
-import Application.Resources.Category;
-import Application.Resources.MyMethods;
-import Application.Resources.MySqlConnection;
-import Application.Resources.Table;
+import Application.Controller.CategoryMenuController;
+import Application.Resources.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -15,7 +13,14 @@ import javafx.stage.Window;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CategoryMenuModel {
+public class CategoryMenuModel implements Observable {
+
+    private Observer observer = (Observer) ManageMenuModel.object;
+    private Observer observerC;
+
+    public CategoryMenuModel(Object t) {
+        observerC = (Observer) t;
+    }
 
     private ObservableList <Category> getCategoriesList () {
         ObservableList <Category> CategoryList = FXCollections.observableArrayList();
@@ -41,20 +46,20 @@ public class CategoryMenuModel {
         tableView.setItems(list);
     }
 
-    public void AddCategory(Window window, TableView<Category> tableView, TableColumn<Category, String> colName, TableColumn<Category, Integer> colID, String text) {
+    public void AddCategory(Window window, String text) {
         String alert = "Enter a Category name!!";
         String error = "ERROR!!! While adding new Category!";
         if (!text.isEmpty()) {
             String DATABASE_QUERY = "INSERT INTO `caregory_Table` (category_name) VALUES('" + text + "')";
             MySqlConnection.MakeConnection().executeQuery (DATABASE_QUERY, error);
             MyMethods.addtoManagerLog("ADD CATEGORY UNDER NAME = " + text);
-            ShowTable(tableView, colID, colName);
+            notifyObserver();
         }
         else MyMethods.showAlert(alert, "ERROR", Alert.AlertType.ERROR, window);
     }
 
-    public void DeleteCategory(Window window, TableView<Category> tableView, TableColumn<Category, String> colName, TableColumn<Category, Integer> colID, String text) {
-        Category category = (Category) tableView.getSelectionModel().getSelectedItem();
+    public void DeleteCategory(Window window, TableView<Category> tableView) {
+        Category category = tableView.getSelectionModel().getSelectedItem();
         String error = "ERROR!!! While deleting the Category!";
         String alert = "!!Their Still Products of this Category!!";
 
@@ -72,10 +77,10 @@ public class CategoryMenuModel {
         String DELETE_QUERY = "DELETE FROM `caregory_Table` WHERE `caregory_Table`.`id` = '" + category.getId() + "'";
         MySqlConnection.MakeConnection().executeQuery (DELETE_QUERY, error);
         MyMethods.addtoManagerLog("DELETE CATEGORY WITH ID = " + category.getId());
-        ShowTable (tableView, colID, colName);
+        notifyObserver();
     }
 
-    public void UpdateCategory(TableView<Category> tableView, TableColumn<Category, String> colName, TableColumn<Category, Integer> colID, String text) {
+    public void UpdateCategory(TableView<Category> tableView, String text) {
         Category category = (Category) tableView.getSelectionModel().getSelectedItem();
         String error = "ERROR!!! While updating the Category!";
 
@@ -83,6 +88,12 @@ public class CategoryMenuModel {
                             "' WHERE `id` = '"+ category.getId() +"'";
         MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, error);
         MyMethods.addtoManagerLog("UPDATE CATEGORY WITH ID = " + category.getId());
-        ShowTable (tableView, colID, colName);
+        notifyObserver();
+    }
+
+    @Override
+    public void notifyObserver() {
+        observerC.updateTable();
+        observer.updateOrder(null, null);
     }
 }

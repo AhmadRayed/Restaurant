@@ -12,6 +12,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,6 +33,12 @@ public class ManagerDashBoardController implements Initializable {
     @FXML
     private Label lblUsername;
 
+    @FXML
+    private Button btLogout;
+
+    @FXML
+    private Button btExit;
+
     //    FXML NODES
 
     Scene scene;
@@ -49,27 +57,25 @@ public class ManagerDashBoardController implements Initializable {
 
     @FXML
     private void Logout_Action(ActionEvent event) {
-        managerDashBoardModel.Logout_Action((Stage) ((Node) event.getSource()).getScene().getWindow(), this);
-//        Exit_Action (event);
-//        try {
-//            Parent parentRoot = FXMLLoader.load(getClass().getResource("/Application/View/Login.fxml"));
-//            Stage primaryStage = new Stage();
-//            primaryStage.setTitle("Login");
-//            primaryStage.setResizable(false);
-//            primaryStage.setIconified(false);
-//            primaryStage.initStyle(StageStyle.UNDECORATED);
-//            primaryStage.setScene(new Scene(parentRoot));
-//            primaryStage.show();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        Exit_Action (event);
+        try {
+            Parent parentRoot = FXMLLoader.load(getClass().getResource("/Application/View/Login.fxml"));
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Login");
+            primaryStage.setResizable(false);
+            primaryStage.setIconified(false);
+            primaryStage.initStyle(StageStyle.UNDECORATED);
+            primaryStage.setScene(new Scene(parentRoot));
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void Exit_Action(ActionEvent event) {
-        managerDashBoardModel.Exit_Action((Stage) ((Node) event.getSource()).getScene().getWindow(), this);
-//        MyMethods.addtoManagerLog("LOGOUT.");
-//        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
+        MyMethods.addtoManagerLog("LOGOUT.");
+        ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 
     @FXML
@@ -145,6 +151,11 @@ public class ManagerDashBoardController implements Initializable {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-        this.initialize(null, null);
+    }
+    public void Press_Action(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.F6)
+            btLogout.fire();
+        else if (keyEvent.getCode() == KeyCode.F7)
+            btExit.fire();
     }
 }

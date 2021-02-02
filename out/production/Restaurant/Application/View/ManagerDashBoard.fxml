@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.ManagerDashBoardController">
+<AnchorPane onKeyPressed="#Press_Action" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.ManagerDashBoardController">
    <children>
       <Pane layoutX="122.0" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #778beb;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -39,8 +39,8 @@
                   <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </padding>
                <children>
-                  <Button mnemonicParsing="false" onAction="#Logout_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #c44569;" text="F6 - Logout" textFill="WHITE" />
-                  <Button mnemonicParsing="false" onAction="#Exit_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #ff0000;" text="F7 - Exit" textFill="WHITE" />
+                  <Button fx:id="btLogout" mnemonicParsing="false" onAction="#Logout_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #c44569;" text="F6 - Logout" textFill="WHITE" />
+                  <Button fx:id="btExit" mnemonicParsing="false" onAction="#Exit_Action" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #ff0000;" text="F7 - Exit" textFill="WHITE" />
                </children>
             </HBox>
          </children>

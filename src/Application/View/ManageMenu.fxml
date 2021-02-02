@@ -87,7 +87,8 @@
          <children>
             <TextField fx:id="txtBrowser" prefHeight="26.0" prefWidth="267.0" promptText="Image Path" />
             <Button fx:id="btBrowser" mnemonicParsing="false" onAction="#Browser_Action" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #63cdda;" text="Browser" textFill="WHITE" />
-            <Pane prefHeight="28.0" prefWidth="285.0" />
+            <Pane prefHeight="28.0" prefWidth="107.0" />
+            <Button fx:id="btStatus" disable="true" mnemonicParsing="false" onAction="#Status_Action" prefHeight="26.0" prefWidth="174.0" style="-fx-background-color: #63cdda;" text="Update Status" textFill="WHITE" />
             <Button fx:id="btDelete" disable="true" mnemonicParsing="false" onAction="#Delete_Action" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #c44569;" text="Delete" textFill="WHITE" />
             <Button mnemonicParsing="false" onAction="#Cancel_Action" prefHeight="26.0" prefWidth="110.0" style="-fx-background-color: #ff0000;" text="Cancel" textFill="WHITE" />
          </children>

@@ -94,6 +94,7 @@ public class LoginModel {
                                         resultSet.getString("password"),        resultSet.getString("email"),
                                         resultSet.getString("mobile_number"),   resultSet.getDouble("salary"),
                                         resultSet.getInt("admin"));
+                ManagerDashBoardModel.manager = (Manager) employee;
                 MyMethods.addtoManagerLog("LOGIN.");
                 return true;
             }

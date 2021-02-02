@@ -2,6 +2,9 @@ package Application.Controller;
 
 import Application.Model.ManageWaitersModel;
 import Application.Resources.Employee;
+import Application.Resources.Observer;
+import Application.Resources.Order;
+import Application.Resources.Table;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ManageWaitersController implements Initializable {
+public class ManageWaitersController implements Initializable, Observer {
 
     @FXML
     private ComboBox <String> cbOption;
@@ -68,6 +71,7 @@ public class ManageWaitersController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         manageWaitersModel = new ManageWaitersModel();
+        ManageWaitersModel.object = this;
         manageWaitersModel.ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
         manageWaitersModel.ShowOption (cbOption);
         addListenerForTable ();
@@ -85,14 +89,12 @@ public class ManageWaitersController implements Initializable {
 
     @FXML
     private void Update_Action(ActionEvent event) {
-        manageWaitersModel.UpdateWaiter (tableView, colID, colFName, colLName, colUsername,
-                                        colPassword, colEmail, colMobile, colSalary, txtChange.getText(), cbOption.getSelectionModel().getSelectedItem());
+        manageWaitersModel.UpdateWaiter (tableView, txtChange.getText(), cbOption.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void Delete_Action(ActionEvent event) {
-        manageWaitersModel.DeleteWaiter (tableView, colID, colFName, colLName, colUsername,
-                colPassword, colEmail, colMobile, colSalary, ((Node) event.getSource()).getScene().getWindow());
+        manageWaitersModel.DeleteWaiter (tableView, ((Node) event.getSource()).getScene().getWindow());
     }
 
     @FXML
@@ -123,6 +125,15 @@ public class ManageWaitersController implements Initializable {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-        this.initialize(null, null);
+    }
+
+    @Override
+    public void updateOrder(Table table, Order order) {
+
+    }
+
+    @Override
+    public void updateTable() {
+        manageWaitersModel.ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
     }
 }

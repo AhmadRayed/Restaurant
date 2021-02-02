@@ -2,6 +2,9 @@ package Application.Controller;
 
 import Application.Model.ManageManagersModel;
 import Application.Resources.Employee;
+import Application.Resources.Observer;
+import Application.Resources.Order;
+import Application.Resources.Table;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ManageManagersController implements Initializable {
+public class ManageManagersController implements Initializable, Observer {
     @FXML
     private ComboBox <String> cbOption;
 
@@ -67,6 +70,7 @@ public class ManageManagersController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         manageManagersModel = new ManageManagersModel();
+        ManageManagersModel.object = this;
         manageManagersModel.ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
         manageManagersModel.ShowOption (cbOption);
         addListenerForTable ();
@@ -84,14 +88,12 @@ public class ManageManagersController implements Initializable {
 
     @FXML
     private void Update_Action(ActionEvent event) {
-        manageManagersModel.UpdateManager (tableView, colID, colFName, colLName, colUsername,
-                colPassword, colEmail, colMobile, colSalary, txtChange.getText(), cbOption.getSelectionModel().getSelectedItem());
+        manageManagersModel.UpdateManager (tableView, txtChange.getText(), cbOption.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     private void Delete_Action(ActionEvent event) {
-        manageManagersModel.DeleteManager (tableView, colID, colFName, colLName, colUsername,
-                colPassword, colEmail, colMobile, colSalary, ((Node) event.getSource()).getScene().getWindow());
+        manageManagersModel.DeleteManager (tableView, ((Node) event.getSource()).getScene().getWindow());
     }
 
     @FXML
@@ -122,6 +124,16 @@ public class ManageManagersController implements Initializable {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-        this.initialize(null, null);
+    }
+
+    @Override
+    public void updateOrder(Table table, Order order) {
+
+    }
+
+    @Override
+    public void updateTable() {
+        manageManagersModel.ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
+
     }
 }

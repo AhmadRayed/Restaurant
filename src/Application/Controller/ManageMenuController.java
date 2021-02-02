@@ -1,7 +1,10 @@
 package Application.Controller;
 
 import Application.Model.ManageMenuModel;
+import Application.Resources.Observer;
+import Application.Resources.Order;
 import Application.Resources.Product;
+import Application.Resources.Table;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +25,10 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class ManageMenuController implements Initializable {
+public class ManageMenuController implements Initializable, Observer {
+
+    @FXML
+    private Button btStatus;
 
     @FXML
     private Button btDelete;
@@ -85,9 +91,12 @@ public class ManageMenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         manageMenuModel = new ManageMenuModel();
+        ManageMenuModel.object = this;
         manageMenuModel.ShowTable(tableView, colID, colName, colDescription, colPrice, colCategory, colStatus);
         manageMenuModel.ShowCategory (cbCategory);
         manageMenuModel.ShowStatus (cbStatus);
+        cbCategory.setPromptText("Category");
+        cbStatus.setPromptText("Status");
         addListenerForTable ();
     }
 
@@ -121,8 +130,7 @@ public class ManageMenuController implements Initializable {
 
     @FXML
     private void Delete_Action(ActionEvent event) {
-        manageMenuModel.DeleteProduct (tableView, colID, colName, colDescription, colPrice, colCategory, colStatus,
-                                        ((Node)event.getSource()).getScene().getWindow());
+        manageMenuModel.DeleteProduct (tableView, ((Node)event.getSource()).getScene().getWindow());
     }
 
     @FXML
@@ -135,13 +143,16 @@ public class ManageMenuController implements Initializable {
             if (newSelection != null){
                 try {
                     btDelete.setDisable(false);
+                    btStatus.setDisable(false);
                     imProduct.setImage(new Image(newSelection.getImage().getBinaryStream()));
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-            else
+            else {
                 btDelete.setDisable(true);
+                btStatus.setDisable(true);
+            }
         });
     }
 
@@ -155,6 +166,21 @@ public class ManageMenuController implements Initializable {
         window.setIconified(false);
         window.setTitle(Title);
         window.showAndWait();
-        this.initialize(null, null);
+    }
+
+    @Override
+    public void updateOrder(Table table, Order order) {
+        manageMenuModel.ShowCategory(cbCategory);
+    }
+
+    @Override
+    public void updateTable() {
+        manageMenuModel.ShowTable(tableView, colID, colName, colDescription, colPrice, colCategory, colStatus);
+    }
+
+    @FXML
+    private void Status_Action(ActionEvent event) {
+        manageMenuModel.UpdateStatus (tableView, cbStatus.getSelectionModel().getSelectedItem(),
+                                        ((Node) event.getSource()).getScene().getWindow());
     }
 }

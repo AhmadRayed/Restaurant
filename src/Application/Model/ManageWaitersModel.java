@@ -1,5 +1,6 @@
 package Application.Model;
 
+import Application.Controller.ManageWaitersController;
 import Application.Resources.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +16,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class ManageWaitersModel {
+public class ManageWaitersModel implements Observable{
+
+    public static Object object;
 
     private Manager manager = ManagerDashBoardModel.manager;
     private int flag = manager.getAdmin();
@@ -83,25 +86,18 @@ public class ManageWaitersModel {
         cbOption.setItems(Options);
     }
 
-    public void UpdateWaiter(TableView<Employee> tableView, TableColumn<Employee, Integer> colID, TableColumn<Employee, String> colFName,
-                             TableColumn<Employee, String> colLName, TableColumn<Employee, String> colUsername,
-                             TableColumn<Employee, String> colPassword, TableColumn<Employee, String> colEmail,
-                             TableColumn<Employee, String> colMobile, TableColumn<Employee, Double> colSalary,
-                             String text, String option) {
+    public void UpdateWaiter(TableView<Employee> tableView, String text, String option) {
         Waiter waiter = (Waiter) tableView.getSelectionModel().getSelectedItem();
 
-        if (text.isEmpty() || option.isEmpty())     return;
+        if (text.isEmpty() || option == null)     return;
         String UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ option +"` = '"+ text+"' WHERE `waiter_Table`.id = '"+ waiter.getId() +"'";
         MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
         MyMethods.addtoManagerLog("UPDATE WAITER WITH ID = " + waiter.getId());
-        ShowTable (tableView, colID, colFName, colLName, colUsername, colPassword, colEmail, colMobile, colSalary);
+        notifyObserver();
+
     }
 
-    public void DeleteWaiter(TableView<Employee> tableView, TableColumn<Employee, Integer> colID,
-                             TableColumn<Employee, String> colFName, TableColumn<Employee, String> colLName,
-                             TableColumn<Employee, String> colUsername, TableColumn<Employee, String> colPassword,
-                             TableColumn<Employee, String> colEmail, TableColumn<Employee, String> colMobile,
-                             TableColumn<Employee, Double> colSalary, Window window) {
+    public void DeleteWaiter(TableView<Employee> tableView, Window window) {
         Waiter waiter = (Waiter) tableView.getSelectionModel().getSelectedItem();
 
         String alert = "Close all Tables of this waiter!!";
@@ -117,6 +113,7 @@ public class ManageWaitersModel {
             }
             else {
                 MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, "error in delete Query");
+                notifyObserver();
                 MyMethods.addtoManagerLog("DELETE WAITER WITH ID = " + waiter.getId());
             }
         } catch (SQLException e) {
@@ -156,6 +153,7 @@ public class ManageWaitersModel {
             preparedStatement.setInt(8, id);
             preparedStatement.executeQuery();
             MyMethods.addtoManagerLog("ADD NEW WAITER WITH NAME = " + firstname + " " + lastname);
+            notifyObserver();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -187,5 +185,10 @@ public class ManageWaitersModel {
             e.printStackTrace();
         }
         return -1;
+    }
+
+    @Override
+    public void notifyObserver() {
+        ((Observer)object).updateTable();
     }
 }

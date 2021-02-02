@@ -18,10 +18,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ManageMenuModel {
+public class ManageMenuModel implements Observable{
 
     private FileInputStream fileInputStream;
     private File file;
+    public static Object object;
 
     public void ShowTable(TableView<Product> tableView, TableColumn<Product, Integer> colID,
                           TableColumn<Product, String> colName, TableColumn<Product, String> colDescription,
@@ -117,7 +118,7 @@ public class ManageMenuModel {
         if (!Price.isEmpty())
             price = Double.parseDouble(Price);
 
-        if (name.isEmpty() || category.isEmpty() || status.isEmpty() || fileInputStream == null) {
+        if (name.isEmpty() || category == null || status == null || fileInputStream == null) {
             MyMethods.showAlert("Please Complete All required fields.", "Not Complete", Alert.AlertType.ERROR, window);
             return;
         }
@@ -146,14 +147,15 @@ public class ManageMenuModel {
             preparedStatement.executeQuery();
             MyMethods.addtoManagerLog("ADD NEW ITEM WITH NAME = " + name);
             fileInputStream = null;
+            notifyObserver();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void DeleteProduct(TableView<Product> tableView, TableColumn<Product, Integer> colID, TableColumn<Product, String> colName, TableColumn<Product, String> colDescription, TableColumn<Product, Double> colPrice, TableColumn<Product, String> colCategory, TableColumn<Product, String> colStatus, Window window) {
-        int id = ((Product) tableView.getSelectionModel().getSelectedItem()).getId();
+    public void DeleteProduct(TableView<Product> tableView, Window window) {
+        int id = tableView.getSelectionModel().getSelectedItem().getId();
         String DELETE_QUERY = "DELETE FROM `products_Table` WHERE `products_Table`.id = '" + id +"'";
 
         String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `orders_table`.current = '1' ";
@@ -163,11 +165,29 @@ public class ManageMenuModel {
                 MyMethods.showAlert("Close ALL orders First", "ERROR", Alert.AlertType.ERROR, window);
             else {
                 MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, null);
+                notifyObserver();
                 MyMethods.addtoManagerLog("DELETE ITEM WITH ID = " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        ShowTable(tableView, colID, colName, colDescription, colPrice, colCategory, colStatus);
     }
+
+    public void UpdateStatus(TableView<Product> tableView, String status, Window window) {
+        int id = tableView.getSelectionModel().getSelectedItem().getId();
+        if (status == null) {
+            MyMethods.showAlert("Please select the status first", "ERROR", Alert.AlertType.ERROR, window);
+            return;
+        }
+        String UPDATE_QUERY = "UPDATE `products_Table` SET `status` = '"+ status +"' WHERE `products_Table`.id = '"+ id +"'";
+        MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, null);
+        notifyObserver();
+    }
+
+
+    @Override
+    public void notifyObserver() {
+        ((Observer) object).updateTable();
+    }
+
 }
