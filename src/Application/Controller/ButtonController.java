@@ -74,6 +74,9 @@ public class ButtonController  {
     private ImageView ivImage;
 
     @FXML
+    private Label lbDescription;
+
+    @FXML
     private void SelectQuantity(MouseEvent mouseEvent) {
         if (WaiterDashBoardModel.order != null)
                 productOnView.onView(product);
@@ -88,8 +91,9 @@ public class ButtonController  {
         this.product = product;
         this.productOnView = productOnView;
         lbName.setText(product.getName());
-        lbPrice.setText(""+product.getPrice());
+        lbPrice.setText(product.getPrice()+" $");
         lbStatus.setText(product.getStatus());
+        lbDescription.setText(product.getDescription());
         ivImage.setImage(new Image(product.getImage().getBinaryStream()));
     }
 }

@@ -85,10 +85,8 @@ public class ManageOrdersModel implements Observable{
     private List <Order> getOrders () {
         List <Order> orderList = new ArrayList<>();
         Order order;
+        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `current` = 1";
 
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `waiter_id` = " +
-                                LoginModel.employee.getId() +
-                                " AND `current` = 1";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {

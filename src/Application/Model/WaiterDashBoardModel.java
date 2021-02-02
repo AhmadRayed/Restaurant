@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -142,6 +143,11 @@ public class WaiterDashBoardModel {
                     @Override
                     public void onView(Product product) {
                         try {
+                            if (product.getStatus().equalsIgnoreCase("Not Available")) {
+                                MyMethods.showAlert("!This Products is NOT Available right know!",
+                                                    "Product Not Available", Alert.AlertType.INFORMATION, window);
+                                return;
+                            }
                             QuantityModel.product = product;
                             openNewWindow("/Application/View/Quantity.fxml", "Quantity");
                         } catch (IOException e) {

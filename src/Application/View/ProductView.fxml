@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="155.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.ButtonController">
+<AnchorPane prefHeight="187.0" prefWidth="176.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.ButtonController">
    <children>
-      <VBox layoutX="20.0" prefHeight="188.0" prefWidth="200.0" style="-fx-border-style: solid;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="20.0" prefHeight="206.0" prefWidth="213.0" style="-fx-border-style: solid;" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0" style="-fx-background-color: #55E6C1;">
                <padding>
@@ -21,6 +21,7 @@
                </children>
             </HBox>
             <ImageView fx:id="ivImage" fitHeight="152.0" fitWidth="200.0" onMouseClicked="#SelectQuantity" pickOnBounds="true" />
+            <Label fx:id="lbDescription" alignment="CENTER" minHeight="-Infinity" opacity="0.5" prefHeight="23.0" prefWidth="200.0" style="-fx-background-color: #F8EFBA;" text="description" />
             <Label fx:id="lbStatus" alignment="CENTER" prefHeight="20.0" prefWidth="202.0" style="-fx-background-color: #F8EFBA;" text="status" />
          </children>
       </VBox>
