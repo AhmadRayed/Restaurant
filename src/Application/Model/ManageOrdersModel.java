@@ -167,8 +167,6 @@ public class ManageOrdersModel implements Observable{
             Order order = getOrder(table.getId());
             orders.add(order);
             MyMethods.addtoWaiterLog("CREATE AN ORDER WITH ID = " + order.getOrder_ID());
-//            WaiterDashBoardModel.order = order;
-//            WaiterDashBoardModel.table = table;
             Gorder = order;
             Gtable = table;
             notifyObserver();
@@ -208,8 +206,6 @@ public class ManageOrdersModel implements Observable{
                 if (X.getWaiter_ID() != LoginModel.employee.getId())
                     MyMethods.showAlert("!!This Table is not owned By you!!", "ERROR", Alert.AlertType.ERROR, window);
                 else {
-//                    WaiterDashBoardModel.order = X;
-//                    WaiterDashBoardModel.table = table;
                     Gorder = X;
                     Gtable = table;
                     notifyObserver();

@@ -35,9 +35,7 @@ public class VerifyCancelController implements Initializable {
     @FXML
     public void verify_Action(ActionEvent event) {
         verifyCancelModel.Cancel(txtUsername.getText(), txtPassword.getText(), order.getOrder_ID());
-//        WaiterDashBoardModel.order = null;
-//        WaiterDashBoardModel.table = null;
-//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
+
         Cancel_Action(event);
 
     }

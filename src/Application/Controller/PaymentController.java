@@ -29,14 +29,12 @@ public class PaymentController implements Initializable {
     @FXML
     private void ByCard(ActionEvent event) {
         paymentModel.ByCard (txtDiscount.getText(), txtCardNumber.getText());
-//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
     @FXML
     private void ByCash(ActionEvent event) {
         paymentModel.ByCash (txtDiscount.getText());
-//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 }

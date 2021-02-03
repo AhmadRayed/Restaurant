@@ -40,7 +40,6 @@ public class QuantityController implements Initializable {
         txtAComment.setText("");
         txtQuantity.setText("1");
 
-//        ((WaiterDashBoardController) WaiterDashBoardModel.getT()).initialize(null, null);
         ((Node) event.getSource()).getScene().getWindow().hide();
     }
 
