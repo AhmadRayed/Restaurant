@@ -33,7 +33,7 @@ public class WaiterDashBoardModel {
     Parent root;
     Stage window;
 //
-    public static Waiter waiter; //= (Waiter) LoginModel.employee;
+    public static Waiter waiter;
     public static Order order;
     public static Table table;
     public static Object T;
