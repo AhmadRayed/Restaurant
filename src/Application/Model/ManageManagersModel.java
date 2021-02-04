@@ -81,10 +81,8 @@ public class ManageManagersModel implements Observable{
     public void UpdateManager(TableView<Employee> tableView, String text, String option) {
 
         Manager m = (Manager) tableView.getSelectionModel().getSelectedItem();
-
-        if (text.isEmpty() || option == null)     return;
-        String UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ option +"` = '"+ text+"' WHERE `manager_Table`.id = '"+ m.getId() +"'";
-        MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
+        if (text.isEmpty() || option == null)    return;
+        manager.updateEmployee(m, option, text, false);
         MyMethods.addtoManagerLog("UPDATE MANAGER WITH ID = " + m.getId());
         notifyObserver();
     }

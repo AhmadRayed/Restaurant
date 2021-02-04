@@ -28,6 +28,23 @@ public class Manager extends Employee{
         return admin;
     }
 
+    public boolean updateEmployee (Employee e, String Option, String NewValue, boolean W)
+    {
+        String UPDATE_QUERY;
+        for (Employee X :
+                employees) {
+            if (e == X) {
+                if (W == true || admin == 0)
+                    UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ Option +"` = '"+ NewValue +"' WHERE `waiter_Table`.id = '"+ e.getId() +"'";
+                else
+                    UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ Option +"` = '"+ NewValue+"' WHERE `manager_Table`.id = '"+ e.getId() +"'";
+                MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addEmployee (Employee e) {
         employees.add(e);
     }

@@ -88,10 +88,8 @@ public class ManageWaitersModel implements Observable{
 
     public void UpdateWaiter(TableView<Employee> tableView, String text, String option) {
         Waiter waiter = (Waiter) tableView.getSelectionModel().getSelectedItem();
-
         if (text.isEmpty() || option == null)     return;
-        String UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ option +"` = '"+ text+"' WHERE `waiter_Table`.id = '"+ waiter.getId() +"'";
-        MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
+        manager.updateEmployee(waiter, option, text, true);
         MyMethods.addtoManagerLog("UPDATE WAITER WITH ID = " + waiter.getId());
         notifyObserver();
 
