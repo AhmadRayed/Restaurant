@@ -95,7 +95,7 @@ public class ManageMenuModel implements Observable{
         chooser.setTitle("Open File");
         chooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Image Files",
-                        "*.bmp", "*.png", "*.jpg", "*.gif"));
+                        "*.bmp", "*.png", "*.jpg", "*.gif", "*.jpeg"));
         file = chooser.showOpenDialog(window);
         if (file != null) {
             String imagepath = file.toURI().toURL().toString();

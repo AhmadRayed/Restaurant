@@ -113,7 +113,7 @@ public class ManagerDashBoardController implements Initializable {
     private void Sales_Report(ActionEvent event) {
         try {
             ReportController.detector = 2;
-            openNewWindow("/Application/View/Report.fxml", "Waiters Report");
+            openNewWindow("/Application/View/Report.fxml", "Sales Report");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class ManagerDashBoardController implements Initializable {
     private void Manager_Report(ActionEvent event) {
         try {
             ReportController.detector = 1;
-            openNewWindow("/Application/View/Report.fxml", "Waiters Report");
+            openNewWindow("/Application/View/Report.fxml", "Managers Report");
 
         } catch (Exception e) {
             e.printStackTrace();

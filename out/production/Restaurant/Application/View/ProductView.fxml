@@ -21,7 +21,7 @@
                </children>
             </HBox>
             <ImageView fx:id="ivImage" fitHeight="152.0" fitWidth="200.0" onMouseClicked="#SelectQuantity" pickOnBounds="true" />
-            <Label fx:id="lbDescription" alignment="CENTER" minHeight="-Infinity" opacity="0.5" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #F8EFBA;" text="description" />
+            <Label fx:id="lbDescription" alignment="CENTER" minHeight="-Infinity" opacity="0.5" prefHeight="23.0" prefWidth="200.0" style="-fx-background-color: #F8EFBA;" text="description" />
             <Label fx:id="lbStatus" alignment="CENTER" prefHeight="20.0" prefWidth="202.0" style="-fx-background-color: #F8EFBA;" text="status" />
          </children>
       </VBox>
