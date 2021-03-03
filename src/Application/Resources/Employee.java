@@ -1,78 +1,99 @@
 package Application.Resources;
 
+import java.sql.Blob;
+import java.sql.Date;
+
 public abstract class Employee {
 
-    protected int       id;
-    protected String    First_Name,
-                        Last_Name,
-                        UserName,
-                        Password,
-                        Email,
-                        Mobile_Number;
-    protected Double    Salary;
+    protected int           ID,
+                            Age;
+    protected Blob          Profile_Image;
+    protected String        First_Name,
+                            Last_Name,
+                            Username,
+                            Password,
+                            Mobile_Number;
+    protected Double        Salary;
+    protected java.sql.Date Birthdate;
 
-    public int getId () {
-        return id;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
-    public String getFirst_Name() {
-        return First_Name;
+    public void setSalary(Double salary) {
+        Salary = salary;
     }
 
-    public String getPassword() {
-        return Password;
-    }
-
-    public String getUserName() {
-        return UserName;
-    }
-
-    public Double getSalary() {
-        return Salary;
-    }
-
-    public String getEmail() {
-        return Email;
-    }
-
-    public String getLast_Name() {
-        return Last_Name;
-    }
-
-    public String getMobile_Number() {
-        return Mobile_Number;
-    }
-
-    public void setUserName (String userName) {
-        UserName = userName;
-    }
-
-    public void setId (int id) {
-        this.id = id;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
-
-    public void setFirst_Name(String first_Name) {
-        First_Name = first_Name;
-    }
-
-    public void setLast_Name(String last_Name) {
-        Last_Name = last_Name;
-    }
-
-    public void setEmail(String email) {
-        Email = email;
+    public void setAge(int age) {
+        Age = age;
     }
 
     public void setMobile_Number(String mobile_Number) {
         Mobile_Number = mobile_Number;
     }
 
-    public void setSalary(Double salary) {
-        Salary = salary;
+    public void setLast_Name(String last_Name) {
+        Last_Name = last_Name;
+    }
+
+    public void setFirst_Name(String first_Name) {
+        First_Name = first_Name;
+    }
+
+    public void setPassword(String password) {
+        Password = password;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        Birthdate = birthdate;
+    }
+
+    public void setProfile_Image(Blob profile_Image) {
+        Profile_Image = profile_Image;
+    }
+
+    public void setUsername(String username) {
+        Username = username;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getMobile_Number() {
+        return Mobile_Number;
+    }
+
+    public int getAge() {
+        return Age;
+    }
+
+    public String getLast_Name() {
+        return Last_Name;
+    }
+
+    public Double getSalary() {
+        return Salary;
+    }
+
+    public String getPassword() {
+        return Password;
+    }
+
+    public String getFirst_Name() {
+        return First_Name;
+    }
+
+    public Blob getProfile_Image() {
+        return Profile_Image;
+    }
+
+    public Date getBirthdate() {
+        return Birthdate;
+    }
+
+    public String getUsername() {
+        return Username;
     }
 
     public String FullName() {

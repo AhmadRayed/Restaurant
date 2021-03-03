@@ -1,27 +1,30 @@
 package Application.Resources;
 
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Manager extends Employee{
-    private int admin = 0;
+    private int admin;
 
     private List <Employee> employees = new ArrayList<>();
 
-    public Manager(int id, String first_name, String last_name, String username,
-                   String password, String email, String mobile_number, Double salary, int admin)
+    public Manager(int id, String first_name, String last_name, String username,  int age, java.sql.Date birthdate,
+                   String password, String mobile_number, Double salary, int admin, Blob image)
     {
-        this.id = id;
-        this.admin = admin;
-        this.Email = email;
+        this.ID = id;
+        this.Age =age;
+        this.Birthdate = birthdate;
+        this.Profile_Image = image;
         this.First_Name = first_name;
         this.Salary = salary;
         this.Last_Name = last_name;
         this.Password = password;
-        this.UserName = username;
+        this.Username = username;
         this.Mobile_Number = mobile_number;
+        this.admin = admin;
     }
 
     public int getAdmin() {
@@ -35,9 +38,9 @@ public class Manager extends Employee{
                 employees) {
             if (e == X) {
                 if (W == true || admin == 0)
-                    UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ Option +"` = '"+ NewValue +"' WHERE `waiter_Table`.id = '"+ e.getId() +"'";
+                    UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ Option +"` = '"+ NewValue +"' WHERE `waiter_Table`.id = '"+ e.getID() +"'";
                 else
-                    UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ Option +"` = '"+ NewValue+"' WHERE `manager_Table`.id = '"+ e.getId() +"'";
+                    UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ Option +"` = '"+ NewValue+"' WHERE `manager_Table`.id = '"+ e.getID() +"'";
                 MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
                 return true;
             }
