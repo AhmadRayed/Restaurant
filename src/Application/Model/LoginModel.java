@@ -4,9 +4,7 @@ import Application.Resources.*;
 import javafx.scene.control.Alert;
 import javafx.stage.Window;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class LoginModel {
 
@@ -48,26 +46,41 @@ public class LoginModel {
     }
 
     private boolean validate_Waiter (String username, String password) {
-        String SELECT_QUERY = "SELECT * FROM waiter_Table WHERE username = ? AND password = ?";
+        String CALL_PROCEDURE_1 = "{CALL sp_W_Login(?,?,?)}";
+        String CALL_PROCEDURE_2 = "{CALL sp_get_Waiter(?)}";
 
         try {
-            PreparedStatement preparedStatement = mySqlConnection.getConnection().prepareStatement(SELECT_QUERY);
+            CallableStatement callableStatement = mySqlConnection.getConnection().prepareCall(CALL_PROCEDURE_1);
+            callableStatement.setString(1, username);
+            callableStatement.setString(2, password);
+            callableStatement.registerOutParameter(3, Types.INTEGER);
+            callableStatement.execute();
 
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                employee = new Waiter(  resultSet.getInt("id"),               resultSet.getString("first_name"),
-                                        resultSet.getString("last_name"),     resultSet.getString("username"),
-                                        resultSet.getString("password"),      resultSet.getString("email"),
-                                        resultSet.getString("mobile_number"), resultSet.getDouble("salary"),
-                                        resultSet.getInt("manager_id"));
+            int ID = callableStatement.getInt(3);
+            callableStatement.close();
+            System.out.println(ID);
+            if (ID != - 1) {
+                callableStatement = mySqlConnection.getConnection().prepareCall(CALL_PROCEDURE_2);
+                callableStatement.setInt(1, ID);
+                callableStatement.execute();
+                ResultSet resultSet = callableStatement.getResultSet();
+                resultSet.next();
+                employee = new Waiter(
+                                        resultSet.getInt("ID"),
+                                        resultSet.getString("First_Name"),
+                                        resultSet.getString("Last_Name"),
+                                        resultSet.getString("Username"),
+                                        resultSet.getInt("Age"),
+                                        resultSet.getDate("Birthdate"),
+                                        resultSet.getString("Password"),
+                                        resultSet.getString("Mobile_Number"),
+                                        resultSet.getDouble("Salary"),
+                                        resultSet.getInt("Manager_ID"),
+                                        resultSet.getBlob("Profile_Image"));
                 WaiterDashBoardModel.waiter = (Waiter) employee;
                 WaiterDashBoardModel.table = null;
                 WaiterDashBoardModel.order = null;
-                MyMethods.addtoWaiterLog("LOGIN.");
+                callableStatement.close();
                 return true;
             }
             else
@@ -78,24 +91,39 @@ public class LoginModel {
     }
 
     private boolean validate_Manager (String username, String password) {
-        String SELECT_QUERY = "SELECT * FROM manager_Table WHERE username = ? AND password = ?";
+        String CALL_PROCEDURE_1 = "{CALL sp_M_Login(?,?,?)}";
+        String CALL_PROCEDURE_2 = "{CALL sp_get_Manager(?)}";
 
         try {
-            PreparedStatement preparedStatement = mySqlConnection.getConnection().prepareStatement(SELECT_QUERY);
+            CallableStatement callableStatement = mySqlConnection.getConnection().prepareCall(CALL_PROCEDURE_1);
+            callableStatement.setString(1, username);
+            callableStatement.setString(2, password);
+            callableStatement.registerOutParameter(3, Types.INTEGER);
+            callableStatement.execute();
 
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
+            int ID = callableStatement.getInt(3);
+            callableStatement.close();
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                employee = new Manager (resultSet.getInt("id"),                 resultSet.getString("first_name"),
-                                        resultSet.getString("last_name"),       resultSet.getString("username"),
-                                        resultSet.getString("password"),        resultSet.getString("email"),
-                                        resultSet.getString("mobile_number"),   resultSet.getDouble("salary"),
-                                        resultSet.getInt("admin"));
+            if (ID != - 1) {
+                callableStatement = mySqlConnection.getConnection().prepareCall(CALL_PROCEDURE_2);
+                callableStatement.setInt(1, ID);
+                callableStatement.execute();
+                ResultSet resultSet = callableStatement.getResultSet();
+                resultSet.next();
+                employee = new Manager (
+                        resultSet.getInt("ID"),
+                        resultSet.getString("First_Name"),
+                        resultSet.getString("Last_Name"),
+                        resultSet.getString("Username"),
+                        resultSet.getInt("Age"),
+                        resultSet.getDate("Birthdate"),
+                        resultSet.getString("Password"),
+                        resultSet.getString("Mobile_Number"),
+                        resultSet.getDouble("Salary"),
+                        resultSet.getInt("Admin"),
+                        resultSet.getBlob("Profile_Image"));
                 ManagerDashBoardModel.manager = (Manager) employee;
-                MyMethods.addtoManagerLog("LOGIN.");
+                callableStatement.close();
                 return true;
             }
             else
@@ -106,28 +134,26 @@ public class LoginModel {
     }
 
     public boolean validate_inside (String username, String password) {
-        String SELECT_QUERY = "SELECT * FROM manager_Table WHERE username = ? AND password = ?";
+        String CALL_PROCEDURE = "{CALL sp_M_Login(?,?,?)}";
 
         try {
+            CallableStatement callableStatement = mySqlConnection.getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.setString(1, username);
+            callableStatement.setString(2, password);
+            callableStatement.registerOutParameter(3, Types.INTEGER);
+            callableStatement.execute();
 
-            PreparedStatement preparedStatement = mySqlConnection.getConnection().prepareStatement(SELECT_QUERY);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                VI = resultSet.getString("first_name") + " " + resultSet.getString("last_name");
-                VII = resultSet.getInt("id");
+            int ID = callableStatement.getInt(3);
+            callableStatement.close();
+            if (ID != -1)
                 return true;
-            }
-            else return false;
+            else
+                return false;
+
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-    public String VI;
-    public int VII;
 
 }

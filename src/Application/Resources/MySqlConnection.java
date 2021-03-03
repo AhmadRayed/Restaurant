@@ -4,10 +4,10 @@ import java.sql.*;
 
 public class MySqlConnection {
     private static final String
-            DATABASE_URL = "jdbc:mariadb://localhost:3306/restaurant_DB?useSSL=false",
+            DATABASE_URL = "jdbc:mariadb://localhost:3306/Restaurant?useSSL=false",
 //            DATABASE_URL = "jdbc:mariadb:restaurant_DB.sql",
-            DATABASE_USERNAME = "rayed_restaurant",
-            DATABASE_PASSWORD = "0198";
+            DATABASE_USERNAME = "Restaurant_User",
+            DATABASE_PASSWORD = "test123";
 
     private Connection connection;
 
