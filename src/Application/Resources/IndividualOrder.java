@@ -10,6 +10,7 @@ public class IndividualOrder {
                     product_name;
     private double  price,
                     Total;
+//
 
     public IndividualOrder(int id, int order_id, String product_name,int product_id, int quantity, String comment, double price)
     {
