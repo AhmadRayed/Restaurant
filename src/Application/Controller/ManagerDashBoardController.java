@@ -74,7 +74,7 @@ public class ManagerDashBoardController implements Initializable {
 
     @FXML
     private void Exit_Action(ActionEvent event) {
-        MyMethods.addtoManagerLog("LOGOUT.");
+//        MyMethods.addtoManagerLog("LOGOUT.");
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 

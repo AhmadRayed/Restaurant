@@ -7,6 +7,9 @@ import Application.Resources.Observer;
 import javafx.scene.control.Alert;
 import javafx.stage.Window;
 
+import java.sql.CallableStatement;
+import java.sql.SQLException;
+
 public class VerifyItemEditModel implements Observable {
 
     private Observer observer;
@@ -22,11 +25,20 @@ public class VerifyItemEditModel implements Observable {
         if (quantity.isEmpty() || q == 0)
             MyMethods.showAlert(alert, "ERROR", Alert.AlertType.ERROR, window);
         if (flag) {
-            String UPDATE_QUERY = "UPDATE `order_item_table` SET `quantity` = '"+ q +
-                    "' WHERE `order_item_table`.`id` ='" + id + "'";
-            MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, null);
+
+            String CALL_PROCEDURE = "{CALL sp_edit_Order(?,?)}";
+            try {
+                CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+                callableStatement.setInt(1, q);
+                callableStatement.setInt(2, id);
+                callableStatement.execute();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.err.println(e.getMessage());
+            }
             notifyObserver();
-            MyMethods.addINtoManagerLog("EDIT ITEMS UNDER ID = " + id);
+//            MyMethods.addINtoManagerLog("EDIT ITEMS UNDER ID = " + id);
         }
     }
 

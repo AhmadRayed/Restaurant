@@ -187,7 +187,6 @@ public class WaiterDashBoardController implements Initializable, Observer {
 
     @FXML
     private void Exit_Action(ActionEvent event) {
-        MyMethods.addtoWaiterLog("LOGOUT.");
         ((Stage) ((Node) event.getSource()).getScene().getWindow()).close();
     }
 

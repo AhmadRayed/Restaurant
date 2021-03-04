@@ -25,8 +25,8 @@ public class PaymentModel implements Observable {
         else
             payment.Discount();
 
-        MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
-                "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CARD");
+//        MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
+//                "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CARD");
         notifyObserver();
     }
 
@@ -40,8 +40,8 @@ public class PaymentModel implements Observable {
             payment.Pay();
         else
             payment.Discount();
-        MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
-                                        "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CASH");
+//        MyMethods.addtoWaiterLog("CLOSE AN ORDER WITH ID = " + WaiterDashBoardModel.order.getOrder_ID() +
+//                                        "WITH TOTAL PRICE = " + WaiterDashBoardModel.order.getTotal() + "BY CASH");
         notifyObserver();
     }
 

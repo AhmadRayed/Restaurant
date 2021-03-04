@@ -1,8 +1,6 @@
 package Application.Resources;
 
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +32,28 @@ public class Manager extends Employee{
     public boolean updateEmployee (Employee e, String Option, String NewValue, boolean W)
     {
         String UPDATE_QUERY;
+        String CALL_PROCEDURE;
         for (Employee X :
                 employees) {
             if (e == X) {
                 if (W == true || admin == 0)
-                    UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ Option +"` = '"+ NewValue +"' WHERE `waiter_Table`.id = '"+ e.getID() +"'";
+                    CALL_PROCEDURE = "{CALL sp_Edit_Waiter(?,?,?)}";
+//                    UPDATE_QUERY = "UPDATE `waiter_Table` SET `"+ Option +"` = '"+ NewValue +"' WHERE `waiter_Table`.id = '"+ e.getID() +"'";
                 else
-                    UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ Option +"` = '"+ NewValue+"' WHERE `manager_Table`.id = '"+ e.getID() +"'";
-                MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
+                    CALL_PROCEDURE = "{CALL sp_Edit_Manager(?,?,?)}";
+//                    UPDATE_QUERY = "UPDATE `manager_Table` SET `"+ Option +"` = '"+ NewValue+"' WHERE `manager_Table`.id = '"+ e.getID() +"'";
+//                MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, "ERROR in QUERY");
+                try {
+                    CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+                    callableStatement.setInt(1, e.getID());
+                    callableStatement.setString(2, Option);
+                    callableStatement.setString(3, NewValue);
+
+                    callableStatement.execute();
+                } catch (SQLException err){
+                    err.printStackTrace();
+                    System.err.println(err.getMessage());
+                }
                 return true;
             }
         }

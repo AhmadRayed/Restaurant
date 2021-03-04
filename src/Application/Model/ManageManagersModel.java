@@ -56,11 +56,17 @@ public class ManageManagersModel implements Observable{
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                manager.addEmployee(new Manager (   resultSet.getInt("id"),                 resultSet.getString("first_name"),
-                                                    resultSet.getString("last_name"),       resultSet.getString("username"),
-                                                    resultSet.getString("password"),        resultSet.getString("email"),
-                                                    resultSet.getString("mobile_number"),   resultSet.getDouble("salary"),
-                                                    resultSet.getInt("admin")));
+                manager.addEmployee(new Manager (   resultSet.getInt("ID"),
+                        resultSet.getString("First_Name"),
+                        resultSet.getString("Last_Name"),
+                        resultSet.getString("Username"),
+                        resultSet.getInt("Age"),
+                        resultSet.getDate("Birthdate"),
+                        resultSet.getString("Password"),
+                        resultSet.getString("Mobile_Number"),
+                        resultSet.getDouble("Salary"),
+                        resultSet.getInt("Admin"),
+                        resultSet.getBlob("Profile_Image")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,7 +89,7 @@ public class ManageManagersModel implements Observable{
         Manager m = (Manager) tableView.getSelectionModel().getSelectedItem();
         if (text.isEmpty() || option == null)    return;
         manager.updateEmployee(m, option, text, false);
-        MyMethods.addtoManagerLog("UPDATE MANAGER WITH ID = " + m.getId());
+        MyMethods.addtoManagerLog("UPDATE MANAGER WITH ID = " + m.getID());
         notifyObserver();
     }
 
@@ -92,8 +98,8 @@ public class ManageManagersModel implements Observable{
 
         String alert = "Remove all waiters belongs to this manager!!";
 
-        String DELETE_QUERY = "DELETE FROM `manager_Table` WHERE `manager_Table`.id = '"+ m.getId() +"'";
-        String SELECT_QUERY = "SELECT * FROM `waiter_Table` WHERE manager_id = '"+ m.getId() +"'";
+        String DELETE_QUERY = "DELETE FROM `manager_Table` WHERE `manager_Table`.id = '"+ m.getID() +"'";
+        String SELECT_QUERY = "SELECT * FROM `waiter_Table` WHERE manager_id = '"+ m.getID() +"'";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
@@ -103,7 +109,7 @@ public class ManageManagersModel implements Observable{
             else {
                 MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, "error in delete Query");
                 notifyObserver();
-                MyMethods.addtoManagerLog("DELETE MANAGER WITH ID = " + m.getId());
+                MyMethods.addtoManagerLog("DELETE MANAGER WITH ID = " + m.getID());
             }
         } catch (SQLException e) {
             e.printStackTrace();

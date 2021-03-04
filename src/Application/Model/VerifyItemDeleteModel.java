@@ -15,10 +15,10 @@ public class VerifyItemDeleteModel implements Observable {
     public void Delete(String username, String password, int id) {
         boolean flag = LoginModel.create_Login().validate_inside (username, password);
         if (flag) {
-            String DELETE_QUERY = "DELETE FROM `order_item_table` WHERE `order_item_table`.`id` = '" + id + "'";
+            String DELETE_QUERY = "DELETE FROM `Individual_Order` WHERE `Individual_Order`.`ID` = '" + id + "'";
             MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, null);
             notifyObserver();
-            MyMethods.addINtoManagerLog("DELETE ITEMS UNDER ID = " + id);
+//            MyMethods.addINtoManagerLog("DELETE ITEMS UNDER ID = " + id);
         }
     }
 

@@ -10,7 +10,7 @@ public class Product extends Menu {
     private Blob    image;
     private String category_name;
 
-    public Product(int id, String product_name, String description, double price, String status, int category_ID, Blob image)
+    public Product(int id, String product_name, String description, double price, String status, int category_ID, String category_name, Blob image)
     {
         this.id = id;
         this.name = product_name;
@@ -19,6 +19,7 @@ public class Product extends Menu {
         this.status = status;
         this.category_ID = category_ID;
         this.image = image;
+        this.category_name = category_name;
 
     }
 

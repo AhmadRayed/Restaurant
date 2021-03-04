@@ -4,7 +4,6 @@ public class IndividualOrder {
 
     private int     id,
                     order_id,
-                    product_id,
                     quantity;
     private String  comment,
                     product_name;
@@ -12,16 +11,15 @@ public class IndividualOrder {
                     Total;
 //
 
-    public IndividualOrder(int id, int order_id, String product_name,int product_id, int quantity, String comment, double price)
+    public IndividualOrder(int id, int order_id, String product_name, int quantity, String comment, double total)
     {
         this.comment = comment;
         this.order_id = order_id;
         this.quantity = quantity;
-        this.product_id = product_id;
         this.product_name = product_name;
         this.id = id;
-        this.price = price;
-        Total = price*quantity;
+        this.Total = total;
+        price = this.Total/quantity;
     }
 
     public void setId(int id) {
@@ -40,9 +38,6 @@ public class IndividualOrder {
         this.quantity = quantity;
     }
 
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
-    }
 
     public int getId() {
         return id;
@@ -58,10 +53,6 @@ public class IndividualOrder {
 
     public String getComment() {
         return comment;
-    }
-
-    public int getProduct_id() {
-        return product_id;
     }
 
     public String getProduct_name() {

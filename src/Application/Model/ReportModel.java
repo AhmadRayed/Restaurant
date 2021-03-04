@@ -60,7 +60,7 @@ public class ReportModel {
                 int id = resultSet.getInt("id");
                 for (Employee X :
                         manager.getEmployees()) {
-                    if (X.getId() == id) {
+                    if (X.getID() == id) {
                         report = new Report (id, resultSet.getString("Activity"));
                         ReportList.add(report);
                         break;
@@ -109,18 +109,24 @@ public class ReportModel {
         manager.getEmployees().clear();
         String SELECT_QUERY;
         if (manager.getAdmin() == 0)
-            SELECT_QUERY = "SELECT * FROM `waiter_Table` WHERE `waiter_Table`.manager_id = '" + manager.getId() + "'";
+            SELECT_QUERY = "SELECT * FROM `waiter_Table` WHERE `waiter_Table`.manager_id = '" + manager.getID() + "'";
         else
             SELECT_QUERY = "SELECT * FROM `waiter_Table`";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                manager.addEmployee(new Waiter(   resultSet.getInt("id"),               resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),     resultSet.getString("username"),
-                        resultSet.getString("password"),      resultSet.getString("email"),
-                        resultSet.getString("mobile_number"), resultSet.getDouble("salary"),
-                        resultSet.getInt("manager_id")));
+                manager.addEmployee(new Waiter(   resultSet.getInt("ID"),
+                        resultSet.getString("First_Name"),
+                        resultSet.getString("Last_Name"),
+                        resultSet.getString("Username"),
+                        resultSet.getInt("Age"),
+                        resultSet.getDate("Birthdate"),
+                        resultSet.getString("Password"),
+                        resultSet.getString("Mobile_Number"),
+                        resultSet.getDouble("Salary"),
+                        resultSet.getInt("Manager_ID"),
+                        resultSet.getBlob("Profile_Image")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

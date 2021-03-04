@@ -21,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -55,12 +56,14 @@ public class WaiterDashBoardModel {
 
     private List <Menu> getCategories () {
         List <Menu> Categories = new ArrayList<>();
-        String SELECT_QUERY = "SELECT * FROM `caregory_Table`";
-        ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
+        String CALL_PROCEDURE = "{CALL sp_get_Category()}";
         try {
+            CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.execute();
+            ResultSet resultSet = callableStatement.getResultSet();
             while (resultSet.next()) {
-                Categories.add(new Category (resultSet.getInt("id"),
-                                                resultSet.getString("category_name")));
+                Categories.add(new Category (resultSet.getInt("ID"),
+                                                resultSet.getString("Name")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,23 +72,26 @@ public class WaiterDashBoardModel {
     }
 
     private void prepareProducts (List <Menu> Categories) {
-        String SELECT_QUERY = "SELECT * FROM `products_Table`";
-        ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
+        String CALL_PROCEDURE = "{CALL sp_get_Products()}";
         try {
+            CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.execute();
+            ResultSet resultSet = callableStatement.getResultSet();
             while (resultSet.next()) {
-                int id  = resultSet.getInt("category_id");
+                int id  = resultSet.getInt("Category_ID");
                 for (Menu X :
                         Categories) {
                     if (X.getId() == id) {
                         ((Category) X).addProduct(
                                 new Product(
-                                        resultSet.getInt("id"),
-                                        resultSet.getString("product_name"),
-                                        resultSet.getString("description"),
-                                        resultSet.getDouble("price"),
-                                        resultSet.getString("status"),
-                                        resultSet.getInt("category_id"),
-                                        resultSet.getBlob("image")
+                                        resultSet.getInt("Product_ID"),
+                                        resultSet.getString("Product_Name"),
+                                        resultSet.getString("Product_Description"),
+                                        resultSet.getDouble("Price"),
+                                        resultSet.getString("Status"),
+                                        resultSet.getInt("Category_ID"),
+                                        resultSet.getString("Category_Name"),
+                                        resultSet.getBlob("Product_Image")
                                 )
                         );
                         break;
@@ -193,19 +199,20 @@ public class WaiterDashBoardModel {
     private ObservableList <IndividualOrder> getIndividualOrderList() {
         ObservableList <IndividualOrder> IndividualOrderList = FXCollections.observableArrayList();
         IndividualOrder individualOrder;
-        String SELECT_QUERY = "SELECT o.id, o.order_id, o.product_id, o.quantity, o.comment, p.product_name, p.price "+
-                                "FROM order_item_table o INNER JOIN products_Table p WHERE o.product_id = p.id";
-        ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
+
+        String CALL_PROCEDURE = "{CALL sp_get_Orders_Details()}";
         try {
+            CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.execute();
+            ResultSet resultSet = callableStatement.getResultSet();
             while (resultSet.next()) {
-                if (order.getOrder_ID() == resultSet.getInt("order_id")) {
-                    individualOrder = new IndividualOrder(  resultSet.getInt("id"),
-                                                            resultSet.getInt("order_id"),
-                                                            resultSet.getString("product_name"),
-                                                            resultSet.getInt("product_id"),
-                                                            resultSet.getInt("quantity"),
-                                                            resultSet.getString("comment"),
-                                                            resultSet.getDouble("price"));
+                if (order.getOrder_ID() == resultSet.getInt("Order_ID")) {
+                    individualOrder = new IndividualOrder(  resultSet.getInt("ID"),
+                                                            resultSet.getInt("Order_ID"),
+                                                            resultSet.getString("Order_Name"),
+                                                            resultSet.getInt("Quantity"),
+                                                            resultSet.getString("Comment"),
+                                                            resultSet.getDouble("TOTAL"));
                     IndividualOrderList.add(individualOrder);
                 }
             }

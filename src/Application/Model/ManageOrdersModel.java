@@ -43,12 +43,12 @@ public class ManageOrdersModel implements Observable{
         List<OrderButton> ButtonList = new ArrayList<>();
         OrderButton orderButton;
 
-        String SELECT_QUERY = "SELECT * FROM `tables_Table`";
+        String SELECT_QUERY = "SELECT * FROM `Table`";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                orderButton = new OrderButton (new Table (resultSet.getInt("id"),
-                                                resultSet.getString("table_name")),
+                orderButton = new OrderButton (new Table (resultSet.getInt("ID"),
+                                                resultSet.getString("Name")),
                                                 0);
                 ButtonList.add(orderButton);
             }
@@ -59,7 +59,7 @@ public class ManageOrdersModel implements Observable{
     }
 
     private void SetCurrent () {
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `current` = 1";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order`";
         int table_id;
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
@@ -85,17 +85,17 @@ public class ManageOrdersModel implements Observable{
     private List <Order> getOrders () {
         List <Order> orderList = new ArrayList<>();
         Order order;
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `current` = 1";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order`";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                order = new Order(  resultSet.getInt("order_id"),
-                                    resultSet.getInt("table_id"),
-                                    resultSet.getInt("waiter_id"),
-                                    resultSet.getInt("current"),
-                                    resultSet.getDate("date"),
-                                    resultSet.getTime("time"));
+                order = new Order(  resultSet.getInt("Order_ID"),
+                                    resultSet.getInt("Table_ID"),
+                                    resultSet.getInt("Waiter_ID"),
+                                    1,
+                                    resultSet.getDate("Order_Date"),
+                                    resultSet.getTime("Order_Time"));
                 orderList.add(order);
             }
         } catch (SQLException e) {
@@ -150,27 +150,27 @@ public class ManageOrdersModel implements Observable{
     }
 
     public void create_Order (Table table) {
-        PreparedStatement preparedStatement = null;
+        String CALL_PROCEDURE = "{CALL sp_Create_Order(?,?,?)}";
         Connection connection = MySqlConnection.MakeConnection().getConnection();
-        String INSERT_QUERY = "INSERT INTO `orders_table` "+
-                "(table_id, waiter_id, date, time, total, current) VALUES (?,?,?,?,?,1)";
+
+
         try {
+            CallableStatement callableStatement = connection.prepareCall(CALL_PROCEDURE);
+            callableStatement.setInt(1, table.getId());
+            callableStatement.setInt(2, LoginModel.employee.getID());
+            callableStatement.registerOutParameter(3, Types.INTEGER);
+            callableStatement.execute();
 
-            preparedStatement = connection.prepareStatement(INSERT_QUERY);
-            preparedStatement.setInt(1,table.getId());
-            preparedStatement.setInt(2, LoginModel.employee.getId());
-            preparedStatement.setDate(3, currentDate);
-            preparedStatement.setTime(4, currentTime);
-            preparedStatement.setString(5, "0");
-            preparedStatement.executeUpdate();
-
-            Order order = getOrder(table.getId());
-            orders.add(order);
-            MyMethods.addtoWaiterLog("CREATE AN ORDER WITH ID = " + order.getOrder_ID());
-            Gorder = order;
-            Gtable = table;
-            notifyObserver();
-
+            if (callableStatement.getInt(3) == 0)
+                MyMethods.showAlert("!!ERROR ORDER NOT CREATED!!", "ERROR", Alert.AlertType.ERROR, window);
+            else {
+                Order order = getOrder(table.getId());
+                orders.add(order);
+//            MyMethods.addtoWaiterLog("CREATE AN ORDER WITH ID = " + order.getOrder_ID());
+                Gorder = order;
+                Gtable = table;
+                notifyObserver();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -179,19 +179,19 @@ public class ManageOrdersModel implements Observable{
 
     private Order getOrder (int table_ID) {
         Order order = null;
-        String SELECT_QUERY = "SELECT * FROM `orders_table` "+
-                "WHERE `table_id` = " + table_ID + " AND `current` = 1";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order` "+
+                "WHERE `Table_ID` = " + table_ID;
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
 
             if (resultSet.next())
-                order = new Order(  resultSet.getInt("order_id"),
-                                    resultSet.getInt("table_id"),
-                                    resultSet.getInt("waiter_id"),
-                                    resultSet.getInt("current"),
-                                    resultSet.getDate("date"),
-                                    resultSet.getTime("time"));
+                order = new Order(  resultSet.getInt("Order_ID"),
+                                    resultSet.getInt("Table_ID"),
+                                    resultSet.getInt("Waiter_ID"),
+                                1,
+                                    resultSet.getDate("Order_Date"),
+                                    resultSet.getTime("Order_Time"));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -203,7 +203,7 @@ public class ManageOrdersModel implements Observable{
         for (Order X:
                 orders) {
             if (X.getTable_ID() == table.getId()) {
-                if (X.getWaiter_ID() != LoginModel.employee.getId())
+                if (X.getWaiter_ID() != LoginModel.employee.getID())
                     MyMethods.showAlert("!!This Table is not owned By you!!", "ERROR", Alert.AlertType.ERROR, window);
                 else {
                     Gorder = X;

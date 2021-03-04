@@ -11,6 +11,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Window;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,18 +46,24 @@ public class ManageWaitersModel implements Observable{
         manager.getEmployees().clear();
         String SELECT_QUERY;
         if (flag == 0)
-            SELECT_QUERY = "SELECT * FROM `waiter_Table` WHERE `waiter_Table`.manager_id = '" + manager.getId() + "'";
+            SELECT_QUERY = "SELECT * FROM `Waiter` WHERE `Waiter`.Manager_ID = '" + manager.getID() + "'";
         else
-            SELECT_QUERY = "SELECT * FROM `waiter_Table`";
+            SELECT_QUERY = "SELECT * FROM `Waiter`";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                manager.addEmployee(new Waiter(   resultSet.getInt("id"),               resultSet.getString("first_name"),
-                        resultSet.getString("last_name"),     resultSet.getString("username"),
-                        resultSet.getString("password"),      resultSet.getString("email"),
-                        resultSet.getString("mobile_number"), resultSet.getDouble("salary"),
-                        resultSet.getInt("manager_id")));
+                manager.addEmployee(new Waiter(   resultSet.getInt("ID"),
+                        resultSet.getString("First_Name"),
+                        resultSet.getString("Last_Name"),
+                        resultSet.getString("Username"),
+                        resultSet.getInt("Age"),
+                        resultSet.getDate("Birthdate"),
+                        resultSet.getString("Password"),
+                        resultSet.getString("Mobile_Number"),
+                        resultSet.getDouble("Salary"),
+                        resultSet.getInt("Manager_ID"),
+                        resultSet.getBlob("Profile_Image")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,12 +84,12 @@ public class ManageWaitersModel implements Observable{
 
     public void ShowOption(ComboBox<String> cbOption) {
         ObservableList <String> Options = FXCollections.observableArrayList();
-        Options.add("first_name");
-        Options.add("last_name");
-        Options.add("password");
+        Options.add("First_Name");
+        Options.add("Last_Name");
+        Options.add("Password");
         Options.add("email");
-        Options.add("mobile_number");
-        Options.add("salary");
+        Options.add("Mobile_Number");
+        Options.add("Salary");
         cbOption.setItems(Options);
     }
 
@@ -90,7 +97,7 @@ public class ManageWaitersModel implements Observable{
         Waiter waiter = (Waiter) tableView.getSelectionModel().getSelectedItem();
         if (text.isEmpty() || option == null)     return;
         manager.updateEmployee(waiter, option, text, true);
-        MyMethods.addtoManagerLog("UPDATE WAITER WITH ID = " + waiter.getId());
+//        MyMethods.addtoManagerLog("UPDATE WAITER WITH ID = " + waiter.getID());
         notifyObserver();
 
     }
@@ -100,9 +107,9 @@ public class ManageWaitersModel implements Observable{
 
         String alert = "Close all Tables of this waiter!!";
 
-        String DELETE_QUERY = "DELETE FROM `waiter_Table` WHERE `waiter_Table`.id = '"+ waiter.getId() +"'";
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE waiter_id = '"+ waiter.getId() +
-                                "' AND current = '1'";
+//        String DELETE_QUERY = "DELETE FROM `waiter_Table` WHERE `waiter_Table`.id = '"+ waiter.getID() +"'";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order` WHERE Waiter_ID = '"+ waiter.getID()+"'";
+        String CALL_PROCEDURE = "{CALL sp_Remove_Waiter(?)}";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
@@ -110,9 +117,12 @@ public class ManageWaitersModel implements Observable{
                 MyMethods.showAlert(alert, "ERROR", Alert.AlertType.ERROR, window);
             }
             else {
-                MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, "error in delete Query");
+                CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+                callableStatement.setInt(1, waiter.getID());
+                callableStatement.execute();
+//                MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, "error in delete Query");
                 notifyObserver();
-                MyMethods.addtoManagerLog("DELETE WAITER WITH ID = " + waiter.getId());
+//                MyMethods.addtoManagerLog("DELETE WAITER WITH ID = " + waiter.getID());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -126,7 +136,7 @@ public class ManageWaitersModel implements Observable{
 
     public void AddWaiter(String firstname, String lastname, String username, String password,
                           String email, String mobile, String salary, ComboBox <String> cbManager, Window window) {
-        int id = manager.getId();
+        int id = manager.getID();
         if (flag == 1) {
             if (cbManager.getSelectionModel().isEmpty()) {
                 MyMethods.showAlert("Please Select a Manager", "ERROR", Alert.AlertType.ERROR, window);

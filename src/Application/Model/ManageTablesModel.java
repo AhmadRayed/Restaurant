@@ -18,13 +18,13 @@ public class ManageTablesModel {
 
     private ObservableList <Table> getTablesList () {
         ObservableList<Table> tableList = FXCollections.observableArrayList();
-        String SELECT_QUERY = "SELECT * FROM `tables_Table`";
+        String SELECT_QUERY = "SELECT * FROM `Table`";
 
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             Table table;
             while (resultSet.next()) {
-                table = new Table(resultSet.getInt("id"), resultSet.getString("table_name"));
+                table = new Table(resultSet.getInt("ID"), resultSet.getString("Name"));
                 tableList.add(table);
             }
         } catch (SQLException e) {
@@ -45,9 +45,8 @@ public class ManageTablesModel {
         String alert = "Enter a table name!!";
         String error = "ERROR!!! While adding new table!";
         if (!text.isEmpty()) {
-            String DATABASE_QUERY = "INSERT INTO `tables_Table` (table_name) VALUES('" + text + "')";
+            String DATABASE_QUERY = "INSERT INTO `Table` (Name) VALUES('" + text + "')";
             MySqlConnection.MakeConnection().executeQuery (DATABASE_QUERY, error);
-            MyMethods.addtoWaiterLog("ADD A TABLE UNDER NAME " + text);
             ShowTable(tableView, colID, colName);
         }
         else MyMethods.showAlert(alert, "ERROR", Alert.AlertType.ERROR, window);
@@ -58,7 +57,7 @@ public class ManageTablesModel {
         String error = "ERROR!!! While deleting the table!";
         String alert = "!!Close Order First!!";
 
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `table_id` = '"+ table.getId() +"' AND `current` = 1";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order` WHERE `Table_ID` = '"+ table.getId() +"'";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             if (resultSet.next()) {
@@ -69,7 +68,7 @@ public class ManageTablesModel {
             e.printStackTrace();
         }
 
-        String DELETE_QUERY = "DELETE FROM `tables_Table` WHERE `tables_Table`.`id` = '" + table.getId() + "'";
+        String DELETE_QUERY = "DELETE FROM `Table` WHERE `Table`.`ID` = '" + table.getId() + "'";
         MySqlConnection.MakeConnection().executeQuery (DELETE_QUERY, error);
         MyMethods.addtoWaiterLog("REMOVE A TABLE UNDER NAME " + text);
         ShowTable (tableView, colID, colName);

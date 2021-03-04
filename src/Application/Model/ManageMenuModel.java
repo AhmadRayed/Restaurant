@@ -14,9 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ManageMenuModel implements Observable{
 
@@ -42,18 +40,20 @@ public class ManageMenuModel implements Observable{
     {
         ObservableList <Product> products = FXCollections.observableArrayList();
         Product product;
-        String SELECT_QUERY = "SELECT * FROM products_Table P INNER JOIN caregory_Table C WHERE P.category_id = C.id";
-        ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
+        String CALL_PROCEDURE = "{CALL sp_get_Products()}";
         try {
+            CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.execute();
+            ResultSet resultSet = callableStatement.getResultSet();
             while (resultSet.next()) {
-                    product = new Product(  resultSet.getInt("id"),
-                                            resultSet.getString("product_name"),
-                                            resultSet.getString("description"),
-                                            resultSet.getDouble("price"),
-                                            resultSet.getString("status"),
-                                            resultSet.getInt("category_id"),
-                                            resultSet.getBlob("image"));
-                    product.setCategory_name(resultSet.getString("category_name"));
+                    product = new Product(  resultSet.getInt("Product_ID"),
+                            resultSet.getString("Product_Name"),
+                            resultSet.getString("Product_Description"),
+                            resultSet.getDouble("Price"),
+                            resultSet.getString("Status"),
+                            resultSet.getInt("Category_ID"),
+                            resultSet.getString("Category_Name"),
+                            resultSet.getBlob("Product_Image"));
                     products.add(product);
                 }
         } catch (SQLException e) {
@@ -70,11 +70,11 @@ public class ManageMenuModel implements Observable{
     private ObservableList <String> getCategoriesNames ()
     {
         ObservableList <String> categoriesNames = FXCollections.observableArrayList();
-        String SELECT_QUERY = "SELECT * FROM `caregory_Table`";
+        String SELECT_QUERY = "SELECT * FROM `Category`";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             while (resultSet.next()) {
-                categoriesNames.add(resultSet.getString("category_name"));
+                categoriesNames.add(resultSet.getString("Name"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -124,30 +124,35 @@ public class ManageMenuModel implements Observable{
         }
 
         int category_id = 0;
-        String SELECT_QUERY = "SELECT * FROM `caregory_Table` WHERE `caregory_Table`.`category_name` = '" + category + "'";
+        String SELECT_QUERY = "SELECT * FROM `Category` WHERE `Category`.`Name` = '" + category + "'";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             if (resultSet.next())
-                    category_id = resultSet.getInt("id");
+                    category_id = resultSet.getInt("ID");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        String CALL_PROCEDURE = "{CALL sp_Add_Product(?,?,?,?,?,?,?)}";
 
-        String INSERT_QUERY = "INSERT INTO `products_Table` " +
-                "(`product_name`,`description`,`price`,`status`,`category_id`,`image`) " +
-                "VALUES(?,?,?,?,?,?)";
         try {
-            PreparedStatement preparedStatement = MySqlConnection.MakeConnection().getConnection().prepareStatement(INSERT_QUERY);
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, description);
-            preparedStatement.setDouble(3, price);
-            preparedStatement.setString(4,status);
-            preparedStatement.setInt(5, category_id);
-            preparedStatement.setBlob(6, fileInputStream);
-            preparedStatement.executeQuery();
-            MyMethods.addtoManagerLog("ADD NEW ITEM WITH NAME = " + name);
-            fileInputStream = null;
-            notifyObserver();
+            CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+            callableStatement.setString(1, name);
+            callableStatement.setString(2, description);
+            callableStatement.setString(3, status);
+            callableStatement.setBlob(4, fileInputStream);
+            callableStatement.setDouble(5, price);
+            callableStatement.setInt(6, category_id);
+
+            callableStatement.registerOutParameter(7, Types.INTEGER);
+            callableStatement.execute();
+            if (callableStatement.getInt(7) == 0)
+                System.out.println("ERROR");
+
+//            MyMethods.addtoManagerLog("ADD NEW ITEM WITH NAME = " + name);
+            else {
+                fileInputStream = null;
+                notifyObserver();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -156,17 +161,24 @@ public class ManageMenuModel implements Observable{
 
     public void DeleteProduct(TableView<Product> tableView, Window window) {
         int id = tableView.getSelectionModel().getSelectedItem().getId();
-        String DELETE_QUERY = "DELETE FROM `products_Table` WHERE `products_Table`.id = '" + id +"'";
+        String CALL_PROCEDURE = "{CALL sp_Delete_Product(?,?)}";
 
-        String SELECT_QUERY = "SELECT * FROM `orders_table` WHERE `orders_table`.current = '1' ";
+        String SELECT_QUERY = "SELECT * FROM `Open_Order`";
         ResultSet resultSet = MySqlConnection.MakeConnection().getResultOfQuery(SELECT_QUERY);
         try {
             if (resultSet.next())
                 MyMethods.showAlert("Close ALL orders First", "ERROR", Alert.AlertType.ERROR, window);
             else {
-                MySqlConnection.MakeConnection().executeQuery(DELETE_QUERY, null);
+                CallableStatement callableStatement = MySqlConnection.MakeConnection().getConnection().prepareCall(CALL_PROCEDURE);
+
+                callableStatement.setInt(1, id);
+                callableStatement.registerOutParameter(2, Types.INTEGER);
+
+                callableStatement.execute();
+                if (callableStatement.getInt(2) == 0)
+                    System.out.println("ERROR");
                 notifyObserver();
-                MyMethods.addtoManagerLog("DELETE ITEM WITH ID = " + id);
+//                MyMethods.addtoManagerLog("DELETE ITEM WITH ID = " + id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,7 +191,7 @@ public class ManageMenuModel implements Observable{
             MyMethods.showAlert("Please select the status first", "ERROR", Alert.AlertType.ERROR, window);
             return;
         }
-        String UPDATE_QUERY = "UPDATE `products_Table` SET `status` = '"+ status +"' WHERE `products_Table`.id = '"+ id +"'";
+        String UPDATE_QUERY = "UPDATE `Product` SET `Status` = '"+ status +"' WHERE `Product`.ID = '"+ id +"'";
         MySqlConnection.MakeConnection().executeQuery(UPDATE_QUERY, null);
         notifyObserver();
     }
